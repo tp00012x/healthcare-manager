@@ -36,6 +36,9 @@ class MemberList(mixins.ListModelMixin,
         for allowed_param in allowed_query_params:
             query_value = self.request.query_params.get(allowed_param, None)
             if query_value is not None:
+                if allowed_param == 'phone_number':
+                    query_value = f'+{query_value[1:]}'
+
                 filter_kwargs = {
                     allowed_param: query_value
                 }
