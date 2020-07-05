@@ -5,3 +5,5 @@ requests>=2.24.0
 flake8>=3.8.3
 pytest>=5.4.3
 mock>=4.0.2
+phonenumbers==8.12.6
+django-phonenumber-field==4.0.0
