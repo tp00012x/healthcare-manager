@@ -20,6 +20,7 @@ INSTALLED_APPS = [
     'core',
     'member',
     'account',
+    'fileuploader',
 ]
 
 MIDDLEWARE = [
@@ -34,10 +35,12 @@ MIDDLEWARE = [
 
 ROOT_URLCONF = 'app.urls'
 
+TEMPLATE_DIR = os.path.join(BASE_DIR, "templates")
+
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [TEMPLATE_DIR, ],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -76,6 +79,11 @@ AUTH_PASSWORD_VALIDATORS = [
         'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
     },
 ]
+
+REST_FRAMEWORK = {
+    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
+    'PAGE_SIZE': 20
+}
 
 LANGUAGE_CODE = 'en-us'
 

@@ -3,7 +3,7 @@ from member.models import Member
 from rest_framework import status
 from rest_framework.test import APIClient
 
-MEMBER_URL = '/api/member/'
+MEMBER_URL = '/api/members/'
 
 
 class MemberApiViewTests(TestCase):
@@ -19,9 +19,9 @@ class MemberApiViewTests(TestCase):
         """Test making GET request to get all members."""
         res = self.client.get(MEMBER_URL)
 
+        response_member = res.data['results'][0]
         self.assertEqual(res.status_code, status.HTTP_200_OK)
-        self.assertEqual(res.data[0]['id'], self.member.id)
-        self.assertEqual(len(res.data), 1)
+        self.assertEqual(response_member['id'], self.member.id)
 
     def test_get_member_list_with_params(self):
         """
@@ -33,7 +33,7 @@ class MemberApiViewTests(TestCase):
         res = self.client.get(f'{MEMBER_URL}?phone_number=+15555555555')
 
         self.assertEqual(res.status_code, status.HTTP_200_OK)
-        response_member = res.data[0]
+        response_member = res.data['results'][0]
         self.assertEqual(response_member['id'], self.member.id)
         self.assertEqual(response_member['first_name'], self.member.first_name)
         self.assertEqual(response_member['last_name'], self.member.last_name)
@@ -43,7 +43,6 @@ class MemberApiViewTests(TestCase):
         self.assertEqual(
             response_member['client_member_id'], self.member.client_member_id
         )
-        self.assertEqual(len(res.data), 1)
 
     ###########################################################################
     # POST
