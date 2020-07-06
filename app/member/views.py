@@ -1,26 +1,17 @@
-from rest_framework import generics
-from rest_framework import mixins
+from rest_framework import viewsets
 
 from .models import Member
-from .serializers import MemberSerializer
 from .permissions import APIPermission
+from .serializers import MemberSerializer
 
 
-class MemberList(mixins.ListModelMixin,
-                 mixins.CreateModelMixin,
-                 generics.GenericAPIView):
+class MemberViewSet(viewsets.ModelViewSet):
     """
-    List all members, or create a new member.
+    A model ViewSet for viewing, creating and deleting Member objects.
     """
     queryset = Member.objects.all()
     serializer_class = MemberSerializer
     permission_classes = [APIPermission]
-
-    def get(self, request, *args, **kwargs):
-        return self.list(request, *args, **kwargs)
-
-    def post(self, request, *args, **kwargs):
-        return self.create(request, *args, **kwargs)
 
     def get_queryset(self):
         """
@@ -36,6 +27,10 @@ class MemberList(mixins.ListModelMixin,
         for allowed_param in allowed_query_params:
             query_value = self.request.query_params.get(allowed_param, None)
             if query_value is not None:
+                # For phone numbers to be valid they must have a '+' in front.
+                # However, when passing the phone_number through the params the
+                # '+' gets removed, so we have to add it back before it gets
+                # serialized.
                 if allowed_param == 'phone_number':
                     query_value = f'+{query_value[1:]}'
 
@@ -45,20 +40,3 @@ class MemberList(mixins.ListModelMixin,
                 return Member.objects.filter(**filter_kwargs)
 
         return Member.objects.all()
-
-
-class MemberDetail(mixins.RetrieveModelMixin,
-                   mixins.UpdateModelMixin,
-                   generics.GenericAPIView):
-    """
-    Retrieve or update a member instance.
-    """
-    queryset = Member.objects.all()
-    serializer_class = MemberSerializer
-    permission_classes = [APIPermission]
-
-    def get(self, request, *args, **kwargs):
-        return self.retrieve(request, *args, **kwargs)
-
-    def put(self, request, *args, **kwargs):
-        return self.update(request, *args, **kwargs)

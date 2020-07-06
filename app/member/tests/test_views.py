@@ -1,10 +1,9 @@
 from django.test import TestCase
-from django.urls import reverse
 from member.models import Member
 from rest_framework import status
 from rest_framework.test import APIClient
 
-MEMBER_URL = reverse('member:list')
+MEMBER_URL = '/api/member/'
 
 
 class MemberApiViewTests(TestCase):
